@@ -38,23 +38,15 @@ void centerOn (vision::signature type)
   }
 }
 
-void collectSignature (vision::signature front_type, vision::signature inner_type)
+void collectSignature (vision::signature front_type)
 {
-  bool bCollected = false;
-  InnerVision.takeSnapshot(inner_type);
-  while (!(InnerVision.objectCount > 0))
+  intakeForward();
+  while (!BumperG.pressing())
   {
+    wait(100, msec);
     centerOn(front_type);
-    FrontVision.takeSnapshot(front_type);
-    if (FrontVision.largestObject.width >= collectedW)
-    {
-      intakeBackward();
-    }
-    else
-    {
-      Drivetrain.drive(forward);
-    }
-    InnerVision.takeSnapshot(inner_type);
+    Drivetrain.drive(forward);
   }
   Drivetrain.stop();
+  intakeOff();
 }

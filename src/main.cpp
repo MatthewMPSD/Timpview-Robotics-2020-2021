@@ -18,6 +18,7 @@
 // FrontVision          vision        10              
 // InnerVision          vision        11              
 // Drivetrain           drivetrain    1, 2, 3, 4, 9   
+// BumperG              bumper        G               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #import "vex.h"
@@ -30,7 +31,7 @@ using namespace vex;
 const int intakePower = 100;
 const int escalatorPower = 100;
 const int rampPower = 100;
-const int drivetrainPower = 10;
+const int drivetrainPower = 50;
 const std::string team = "red";
 const bool skills = false;
 
@@ -69,30 +70,19 @@ void driverControlMode ()
 
 void autonomousMode ()
 {
-  // Drivetrain.driveFor(forward, 36, inches);
-  // Drivetrain.turnFor(left, 135, degrees);
-  // centerOn(FrontVision__RED_BALL);
-  collectSignature(FrontVision__RED_BALL, InnerVision__RED_BALL);
-  // centerOn(FrontVision__GOAL);
-  // Drivetrain.drive(forward);
-  // wait(10, msec);
-  // Drivetrain.stop();
-
-  // //Main Loop
-  // while (Competition.isAutonomous())
-  // {
-  //   centerOn(FrontVision__RED_BALL);
-  //   escalatorBackward();
-  // }
+  Drivetrain.driveFor(forward, 36, inches);
+  Drivetrain.turnFor(left, 135, degrees);
+  centerOn(FrontVision__RED_BALL);
+  collectSignature(FrontVision__RED_BALL);
+  centerOn(FrontVision__GOAL);
+  Drivetrain.drive(forward);
+  wait(10, msec);
+  Drivetrain.stop();
 }
 
 void skillsAutonomousMode ()
 {
-  // Main Loop
-  while (Competition.isAutonomous())
-  {
-
-  }
+  
 }
 
 
