@@ -32,6 +32,14 @@ const int intakePower = 100;
 const int escalatorPower = 100;
 const int rampPower = 100;
 const int drivetrainPower = 50;
+const int drivetrainTurnPower = 100;
+
+const int intakePowerAuto = 100;
+const int escalatorPowerAuto = 100;
+const int rampPowerAuto = 100;
+const int drivetrainPowerAuto = 100;
+const int drivetrainTurnPowerAuto = 100;
+
 const std::string team = "red";
 const bool skills = false;
 
@@ -68,21 +76,61 @@ void driverControlMode ()
   }
 }
 
+void autonomousConfig ()
+{
+  // Set Autonomous Specific Speeds
+  Ramp.setVelocity(rampPowerAuto, velocityUnits::pct);
+  Escalator.setVelocity(escalatorPowerAuto, velocityUnits::pct);
+  IntakeLeft.setVelocity(intakePowerAuto, velocityUnits::pct);
+  IntakeRight.setVelocity(intakePowerAuto, velocityUnits::pct);
+  Drivetrain.setDriveVelocity(drivetrainPowerAuto, velocityUnits::pct);
+  Drivetrain.setTurnVelocity(drivetrainTurnPowerAuto, velocityUnits::pct);
+}
+
 void autonomousMode ()
 {
+  autonomousConfig();
+
   Drivetrain.driveFor(forward, 36, inches);
   Drivetrain.turnFor(left, 135, degrees);
-  centerOn(FrontVision__RED_BALL);
-  collectSignature(FrontVision__RED_BALL);
+  centerOn(allySignature);
+  Drivetrain.setDriveVelocity(drivetrainPowerAuto/3, percent);
+  collectSignature(allySignature);
+  Drivetrain.setDriveVelocity(drivetrainPowerAuto, percent);
   centerOn(FrontVision__GOAL);
   Drivetrain.drive(forward);
-  wait(10, msec);
+  wait(500, msec);
   Drivetrain.stop();
+  toggleRampMotor();
+  escalatorForward();
+  wait(3, sec);
+  toggleRampMotor();
+  intakeOff();
+  escalatorStop();
 }
 
 void skillsAutonomousMode ()
 {
+  autonomousConfig();
   
+  intakeBackward();
+  Drivetrain.driveFor(forward, 18, inches);
+  toggleRampMotor();
+  escalatorForward();
+  wait(1, sec);
+  escalatorStop();
+  toggleRampMotor();
+  Drivetrain.driveFor(reverse, 10, inches);
+  Drivetrain.turnFor(left, 90, degrees);
+  collectSignature(allySignature);
+  centerOn(FrontVision__GOAL);
+  // collectSignature(allySignature);
+  // collectSignature(allySignature);
+  // Drivetrain.turnFor(left, 45, degrees);
+  // Drivetrain.driveFor(forward, 12, inches);
+  // intakeBackward();
+  // wait(1, sec);
+  intakeOff();
 }
 
 
@@ -97,6 +145,7 @@ int main()
   IntakeLeft.setVelocity(intakePower, velocityUnits::pct);
   IntakeRight.setVelocity(intakePower, velocityUnits::pct);
   Drivetrain.setDriveVelocity(drivetrainPower, velocityUnits::pct);
+  Drivetrain.setTurnVelocity(drivetrainTurnPower, velocityUnits::pct);
 
   if (!skills)
   {
