@@ -40,9 +40,9 @@ const int rampPowerAuto = 100;
 const int drivetrainPowerAuto = 100;
 const int drivetrainTurnPowerAuto = 100;
 
+// Run Settings
 const std::string team = "red";
 const bool skills = false;
-
 const signature& allySignature = FrontVision__RED_BALL;
 const signature& enemySignature = FrontVision__BLUE_BALL;
 
@@ -69,11 +69,6 @@ void driverControlMode ()
 
   //Ramp
   Controller1.ButtonA.pressed(toggleRampMotor);
-
-  //Main loop
-  while (Competition.isDriverControl()) 
-  {
-  }
 }
 
 void autonomousConfig ()
@@ -104,8 +99,12 @@ void autonomousMode ()
   toggleRampMotor();
   escalatorForward();
   wait(3, sec);
-  toggleRampMotor();
+  Drivetrain.driveFor(reverse, 6, inches);
+  Drivetrain.driveFor(forward, 6, inches);
+  Drivetrain.driveFor(reverse, 6, inches);
   intakeOff();
+  wait(1, sec);
+  toggleRampMotor();
   escalatorStop();
 }
 
