@@ -38,13 +38,19 @@ const int intakePowerAuto = 100;
 const int escalatorPowerAuto = 100;
 const int rampPowerAuto = 100;
 const int drivetrainPowerAuto = 100;
-const int drivetrainTurnPowerAuto = 100;
+const int drivetrainTurnPowerAuto = 50;
+
+const int drivetrainPowerAutoSkills = 40;
 
 // Run Settings
 const std::string team = "red";
-const bool skills = false;
+const bool skills = true;
 const signature& allySignature = FrontVision__RED_BALL;
 const signature& enemySignature = FrontVision__BLUE_BALL;
+// 0 = left corner
+// 1 = middle 
+// 2 = right corner
+const int autoStrategy = 0;
 
 //Define competition object
 competition Competition;
@@ -82,17 +88,21 @@ void autonomousConfig ()
   Drivetrain.setTurnVelocity(drivetrainTurnPowerAuto, velocityUnits::pct);
 }
 
-void autonomousMode ()
+void cornerStrategy ()
 {
-  autonomousConfig();
-
+  int angleModifier = autoStrategy == 0 ? 1 : -1;
   Drivetrain.driveFor(forward, 36, inches);
-  Drivetrain.turnFor(left, 135, degrees);
+  Drivetrain.turnFor(left, 135*angleModifier, degrees);
   centerOn(allySignature);
   Drivetrain.setDriveVelocity(drivetrainPowerAuto/3, percent);
   collectSignature(allySignature);
   Drivetrain.setDriveVelocity(drivetrainPowerAuto, percent);
+  if (autoStrategy == 2)
+  {
+    Drivetrain.driveFor(forward, 6, inches);
+  }
   centerOn(FrontVision__GOAL);
+  intakeForward();
   Drivetrain.drive(forward);
   wait(500, msec);
   Drivetrain.stop();
@@ -101,34 +111,69 @@ void autonomousMode ()
   wait(3, sec);
   Drivetrain.driveFor(reverse, 6, inches);
   Drivetrain.driveFor(forward, 6, inches);
-  Drivetrain.driveFor(reverse, 6, inches);
-  intakeOff();
   wait(1, sec);
+  Drivetrain.driveFor(reverse, 6, inches);
+  wait(2, sec);
+  intakeOff();
   toggleRampMotor();
   escalatorStop();
+}
+
+void autonomousMode ()
+{
+  autonomousConfig();
+  switch (autoStrategy)
+  {
+    case (0):
+    case (2):
+      cornerStrategy();
+    break;
+    case (1):
+      intakeBackward();
+      Drivetrain.driveFor(forward, 5, inches);
+      depositBalls(1);
+      intakeForward();
+      Drivetrain.driveFor(reverse, 40, inches);
+      Drivetrain.turnFor(right, 100, degrees);
+      centerOn(allySignature);
+      intakeOff();
+      escalatorForward();
+      intakeForward();
+      Drivetrain.setDriveVelocity(drivetrainPowerAuto/3, percent);
+      collectSignature(allySignature);
+      Drivetrain.setDriveVelocity(drivetrainPowerAuto, percent);
+      wait(1500, msec);
+      depositBalls(1);
+      removeBalls(2);
+    break;
+  }
 }
 
 void skillsAutonomousMode ()
 {
   autonomousConfig();
-  
-  intakeBackward();
-  Drivetrain.driveFor(forward, 18, inches);
-  toggleRampMotor();
-  escalatorForward();
-  wait(1, sec);
-  escalatorStop();
-  toggleRampMotor();
-  Drivetrain.driveFor(reverse, 10, inches);
+
+  Drivetrain.setDriveVelocity(drivetrainPowerAutoSkills, percent);
+
+  depositBalls(1);
+  Drivetrain.driveFor(reverse, 6, inches);
+  Drivetrain.turnFor(right, 180, degrees);
+  collectSignature(allySignature);
+  Drivetrain.turnFor(left, 45, degrees);
+  collectSignature(allySignature);
+  Drivetrain.turnFor(left, 90, degrees);
+  centerOn(FrontVision__GOAL);
+  Drivetrain.driveFor(forward, 36, inches);
+  depositBalls(2);
+  Drivetrain.driveFor(reverse, 6, inches);
+  Drivetrain.turnFor(left, 180, degrees);
+  Drivetrain.driveFor(forward, 24, inches);
   Drivetrain.turnFor(left, 90, degrees);
   collectSignature(allySignature);
+  Drivetrain.turnFor(left, 45, degrees);
   centerOn(FrontVision__GOAL);
-  // collectSignature(allySignature);
-  // collectSignature(allySignature);
-  // Drivetrain.turnFor(left, 45, degrees);
-  // Drivetrain.driveFor(forward, 12, inches);
-  // intakeBackward();
-  // wait(1, sec);
+  Drivetrain.driveFor(forward, 36, inches);
+  depositBalls(1);
   intakeOff();
 }
 
