@@ -51,7 +51,7 @@ void collectSignature (vision::signature front_type)
   intakeOff();
 }
 
-void detectSignature (vision::signature sig)
+bool detectSignature (vision::signature sig)
 {
   FrontVision.takeSnapshot(sig);
   if (FrontVision.largestObject.exists)
@@ -63,20 +63,36 @@ void detectSignature (vision::signature sig)
   }
 }
 
-void descoreCompletely (vision::signature sig)
+void descoreCompletely ()
 {
+  int descored = 0;
+  int maxDescored = 3;
+  int maxAttempts = 5;
+
   intakeForward();
   escalatorForward();
-  while (detectSignature(sig))
+  for (int attempts = 0; attempts < maxAttempts && descored < maxDescored; attempts++)
   {
-    Drivetrain.driveFor(forward, 6, inches);
+    Drivetrain.drive(forward);
+    wait(500, msec);
     Drivetrain.driveFor(reverse, 6, inches);
-    Drivetrain.driveFor(forward, 6, inches);
+    if (BumperG.pressing())
+    {
+      descored++;
+    }
+    wait(500, msec);
+
+    if (descored == 0 && attempts >= 3)
+    {
+      driveForTime(forward, 500, msec);
+      Controller1.Screen.clearLine();
+      Controller1.Screen.print("READJUSTING...");
+    }
   }
   Drivetrain.driveFor(reverse, 6, inches);
   Drivetrain.turnFor(left, 180, degrees);
   rampOn();
-  wait(5, sec);
+  wait(4, sec);
   intakeOff();
   rampOff();
   escalatorStop();

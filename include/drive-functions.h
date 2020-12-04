@@ -116,3 +116,10 @@ void removeBalls (int number)
   intakeOff();
   escalatorStop();
 }
+
+void driveForTime(vex::directionType dir, int number, vex::timeUnits units)
+{
+  Drivetrain.drive(dir);
+  wait(number, units);
+  Drivetrain.stop();
+}

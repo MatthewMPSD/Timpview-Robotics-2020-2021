@@ -156,25 +156,40 @@ void skillsAutonomousMode ()
   Drivetrain.setDriveVelocity(drivetrainPowerAutoSkills, percent);
 
   depositBalls(1);
-  Drivetrain.driveFor(reverse, 6, inches);
-  Drivetrain.turnFor(right, 180, degrees);
-  collectSignature(allySignature);
-  Drivetrain.turnFor(left, 45, degrees);
-  collectSignature(allySignature);
+
+  Drivetrain.driveFor(reverse, 12, inches);
+  Drivetrain.turnFor(left, 135, degrees);
+  Drivetrain.driveFor(forward, 48, inches);
+  Drivetrain.turnFor(right, 90, degrees);
+  centerOn(enemySignature);
+  driveForTime(forward, 750, msec);
+  wait(500, msec);
+  descoreCompletely();
+  Drivetrain.driveFor(forward, 18, inches);
+  Drivetrain.turnFor(right, 130, degrees);
+  driveForTime(forward, 1, sec);
+  centerOn(enemySignature);
+  driveForTime(forward, 1, sec);
+  centerOn(enemySignature);
+  driveForTime(forward, 750, msec);
+  centerOn(enemySignature);
+  driveForTime(forward, 750, msec);
+  centerOn(enemySignature);
+  descoreCompletely();
+  Drivetrain.driveFor(forward, 6, inches);
+  Drivetrain.turnFor(right, 45, degrees);
+  Drivetrain.driveFor(forward, 40, inches);
+  Drivetrain.turnFor(right, 90, degrees);
+  centerOn(enemySignature);
+  driveForTime(forward, 1, sec);
+  descoreCompletely();
+  Drivetrain.driveFor(forward, 6, inches);
   Drivetrain.turnFor(left, 90, degrees);
-  centerOn(FrontVision__GOAL);
   Drivetrain.driveFor(forward, 36, inches);
-  depositBalls(2);
-  Drivetrain.driveFor(reverse, 6, inches);
-  Drivetrain.turnFor(left, 180, degrees);
-  Drivetrain.driveFor(forward, 24, inches);
-  Drivetrain.turnFor(left, 90, degrees);
-  collectSignature(allySignature);
-  Drivetrain.turnFor(left, 45, degrees);
-  centerOn(FrontVision__GOAL);
-  Drivetrain.driveFor(forward, 36, inches);
-  depositBalls(1);
-  intakeOff();
+  Drivetrain.turnFor(right, 45, degrees);
+  centerOn(enemySignature);
+  driveForTime(forward, 1, sec);
+  descoreCompletely();
 }
 
 
