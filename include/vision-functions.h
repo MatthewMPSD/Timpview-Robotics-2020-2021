@@ -50,3 +50,34 @@ void collectSignature (vision::signature front_type)
   Drivetrain.stop();
   intakeOff();
 }
+
+void detectSignature (vision::signature sig)
+{
+  FrontVision.takeSnapshot(sig);
+  if (FrontVision.largestObject.exists)
+  {
+    return true;
+  } else
+  {
+    return false;
+  }
+}
+
+void descoreCompletely (vision::signature sig)
+{
+  intakeForward();
+  escalatorForward();
+  while (detectSignature(sig))
+  {
+    Drivetrain.driveFor(forward, 6, inches);
+    Drivetrain.driveFor(reverse, 6, inches);
+    Drivetrain.driveFor(forward, 6, inches);
+  }
+  Drivetrain.driveFor(reverse, 6, inches);
+  Drivetrain.turnFor(left, 180, degrees);
+  rampOn();
+  wait(5, sec);
+  intakeOff();
+  rampOff();
+  escalatorStop();
+}
